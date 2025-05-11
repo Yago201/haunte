@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Ponto Eletrônico</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@tailwindcss/browser@latest"></script>
+    <style>
+        /* Estilos personalizados para o sistema de ponto */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            background-color: #f7fafc;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .heading {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #1e293b;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #334155;
+        }
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 0.375rem;
+            border: 1px solid #e2e8f0;
+            font-size: 1rem;
+            line-height: 1.5rem;
+            transition: border-color 0.15s ease-in-out, shadow-sm 0.15s ease-in-out;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.375rem;
+            background-color: #3b82f6;
+            color: #fff;
+            font-weight: 600;
+            font-size: 1rem;
+            line-height: 1.5rem;
+            cursor: pointer;
+            transition: background-color 0.15s ease-in-out, transform 0.15s ease-in-out;
+            border: none;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+        }
+        .btn-primary:hover {
+            background-color: #2563eb;
+            transform: translateY(-1px);
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+        }
+        .btn-primary:active {
+            background-color: #1e40af;
+            transform: translateY(0);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        .record-list {
+            margin-top: 2rem;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 1.5rem;
+        }
+        .record-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #f0f0f0;
+            color: #4a5568;
+        }
+        .record-item:last-child {
+            border-bottom: none;
+        }
+        .record-time {
+            font-weight: 600;
+            color: #1e293b;
+        }
+        #message-container {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border-radius: 0.375rem;
+            text-align: center;
+            font-weight: 500;
+        }
+        .message-success {
+            background-color: #f0fdf4;
+            color: #15803d;
+            border: 1px solid #16a34a;
+        }
+        .message-error {
+            background-color: #fee2e2;
+            color: #b91c1c;
+            border: 1px solid #ef4444;
+        }
+        .login-container {
+            max-width: 400px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            margin-top: 5rem;
+        }
+        .login-heading {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #1e293b;
+        }
+        .login-form-group {
+            margin-bottom: 1rem;
+        }
+        .login-form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #334155;
+        }
+        .login-form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 0.375rem;
+            border: 1px solid #e2e8f0;
+            font-size: 1rem;
+            line-height: 1.5rem;
+            transition: border-color 0.15s ease-in-out, shadow-sm 0.15s ease-in-out;
+        }
+        .login-form-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+        .login-btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.375rem;
+            background-color: #3b82f6;
+            color: #fff;
+            font-weight: 600;
+            font-size: 1rem;
+            line-height: 1.5rem;
+            cursor: pointer;
+            transition: background-color 0.15s ease-in-out, transform 0.15s ease-in-out;
+            border: none;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            text-align: center;
+        }
+        .login-btn:hover {
+            background-color: #2563eb;
+            transform: translateY(-1px);
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+        }
+        .login-btn:active {
+            background-color: #1e40af;
+            transform: translateY(0);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        .logout-btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.375rem;
+            background-color: #dc2626;
+            color: #fff;
+            font-weight: 600;
+            font-size: 1rem;
+            line-height: 1.5rem;
+            cursor: pointer;
+            transition: background-color 0.15s ease-in-out, transform 0.15s ease-in-out;
+            border: none;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+            margin-top: 1rem;
+            width: 100%;
+            text-align: center;
+        }
+        .logout-btn:hover {
+            background-color: #c81e1e;
+            transform: translateY(-1px);
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+        }
+        .logout-btn:active {
+            background-color: #b21818;
+            transform: translateY(0);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        .admin-section {
+            display: none;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e2e8f0;
+        }
+        .admin-heading {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #1e293b;
+        }
+        .employee-list {
+            margin-top: 1.5rem;
+        }
+        .employee-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #f0f0f0;
+            color: #4a5568;
+        }
+        .employee-item:last-child {
+            border-bottom: none;
+        }
+        .employee-name {
+            font-weight: 600;
+            color: #1e293b;
+        }
+        .edit-btn, .delete-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: background-color 0.15s ease-in-out, transform 0.15s ease-in-out;
+            border: none;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            margin-left: 0.5rem;
+        }
+        .edit-btn {
+            background-color: #3b82f6;
+            color: #fff;
+        }
+        .edit-btn:hover {
+            background-color: #2563eb;
+            transform: translateY(-1px);
+        }
+        .delete-btn {
+            background-color: #dc2626;
+            color: #fff;
+        }
+        .delete-btn:hover {
+            background-color: #c81e1e;
+            transform: translateY(-1px);
+        }
+        .new-employee-form {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e2e8f0;
+        }
+        .new-employee-heading {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #1e293b;
+        }
+        .new-employee-form-group {
+            margin-bottom: 1rem;
+        }
+        .new-employee-form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #334155;
+        }
+        .new-employee-form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 0.375rem;
+            border: 1px solid #e2e8f0;
+            font-size: 1rem;
+            line-height: 1.5rem;
+            transition: border-color 0.15s ease-in-out, shadow-sm 0.15s ease-in-out;
+        }
+        .new-employee-form-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+        .add-employee-btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.375rem;
+            background-color: #16a34a;
+            color: #fff;
+            font-weight: 600;
+            font-size: 1rem;
+            line-height: 1.5rem;
+            cursor: pointer;
+            transition: background-color 0.15s ease-in-out, transform 0.15s ease-in-out;
+            border: none;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            text-align: center;
+            margin-top: 1rem;
+        }
+        .add-employee-btn:hover {
+            background-color: #15803d;
+            transform: translateY(-1px);
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+        }
+        .add-employee-btn:active {
+            background-color: #14532d;
+            transform: translateY(0);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        @media (max-width: 640px) {
+            .container {
+                padding: 1.5rem;
+            }
+            .heading {
+                font-size: 1.875rem;
+                margin-bottom: 1.5rem;
+            }
+            .form-input {
+                font-size: 0.9rem;
+                padding: 0.75rem;
+            }
+            .btn-primary, .record-type-button {
+                font-size: 0.9rem;
+                padding: 0.75rem 1.25rem;
+            }
+            .record-item {
+                font-size: 0.9rem;
+            }
+            .record-type-buttons {
+                flex-direction: column;
+            }
+            .record-type-button {
+                margin: 0.5rem 0;
+            }
+            .login-container {
+                padding: 1.5rem;
+            }
+            .login-heading {
+                font-size: 1.875rem;
+                margin-bottom: 1.5rem;
+            }
+            .login-form-input {
+                font-size: 0.9rem;
+                padding: 0.75rem;
+            }
+            .login-btn, .logout-btn {
+                font-size: 0.9rem;
+                padding: 0.75rem 1.25rem;
+            }
+            .employee-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .edit-btn, .delete-btn {
+                margin-left: 0;
+                margin-top: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+    <!-- Tela principal -->
+    <div class="container" id="main-container" style="display: none;">
+        <div class="header">
+            <div class="flex justify-end">
+                <button id="logout-btn" class="logout-btn">Logout</button>
+            </div>
+            <h1 class="heading">Sistema de Ponto Eletrônico</h1>
+        </div>
+
+         <button id="export-csv-btn" class="btn-primary mt-4">Exportar para CSV</button>
+         <button id="apagar-registros-btn" class="mt-4 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
+    Apagar Todos os Registros
+</button>
+
+
+       
+
+          <div class="mb-4">
+  <label for="filtro-data" class="block font-medium text-gray-700">Filtrar por Data:</label>
+  <input type="date" id="filtro-data" class="border p-2 rounded mt-1" />
+  <button id="filtrar-btn" class="ml-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Filtrar</button>
+    </div>
+  <ul id="historico-filtrado" class="mt-4 space-y-2 text-sm text-gray-700"></ul>
+
+        <!-- Histórico de ponto -->
+   <div class="record-list" id="record-list-container">
+  <h2 class="text-xl font-bold mb-4 text-gray-800 border-b pb-2">Histórico de Ponto</h2>
+
+  <!-- Cabeçalhos das colunas -->
+  <div class="grid grid-cols-6 gap-2 text-sm font-semibold text-gray-700 border-b pb-2">
+    <div>ID</div>
+    <div>Nome</div>
+    <div>Data</div>
+    <div>Tipo</div>
+    <div>Hora</div>
+    <div>Justificativa</div>
+  </div>
+
+  <!-- Container de registros -->
+  <div id="record-list-items" class="mt-3 space-y-2"></div>
+</div>
+
+       
+
+
+        <!-- Painel Administrativo -->
+        <div class="admin-section" id="admin-section">
+            <h2 class="admin-heading">Painel Administrativo</h2>
+
+            <!-- Lista de funcionários -->
+            <div class="employee-list" id="employee-list">
+                <h3 class="text-lg font-semibold mb-4 text-gray-700">Lista de Funcionários</h3>
+            </div>
+
+            <!-- Adicionar funcionário -->
+        <div class="new-employee-form" id="new-employee-form">
+    <h3 class="new-employee-heading">Adicionar Novo Funcionário</h3>
+    <div class="new-employee-form-group">
+        <label for="new-employee-name" class="new-employee-form-label">Nome do Funcionário:</label>
+        <input type="text" id="new-employee-name" class="new-employee-form-input" placeholder="Digite o nome do funcionário">
+    </div>
+    <div class="new-employee-form-group">
+        <label for="new-employee-id" class="new-employee-form-label">ID do Funcionário:</label>
+        <input type="text" id="new-employee-id" class="new-employee-form-input" placeholder="Digite o ID do funcionário">
+    </div>
+    <div class="new-employee-form-group">
+        <button id="add-employee-btn" class="add-employee-btn">Adicionar Funcionário</button>
+    </div>
+</div>
+
+
+            <!-- Logs administrativos -->
+            <div class="logs-section" id="logs-section">
+                <h2 class="logs-heading">Registro de Ações Administrativas</h2>
+                <ul id="record-list" class="space-y-2 text-sm text-gray-600"></ul>
+                <div id="logs-container"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tela de login -->
+    <div class="login-container" id="login-container">
+        <h2 class="login-heading">Login Administrador</h2>
+        <div class="login-form-group">
+            <label for="admin-username" class="login-form-label">Nome de Usuário:</label>
+            <input type="text" id="admin-username" class="login-form-input" placeholder="Digite seu nome de usuário">
+        </div>
+        <div class="login-form-group">
+            <label for="admin-password" class="login-form-label">Senha:</label>
+            <input type="password" id="admin-password" class="login-form-input" placeholder="Digite sua senha">
+        </div>
+        <div class="login-form-group">
+            <button id="login-btn" class="login-btn">Login</button>
+        </div>
+        <div id="login-message-container" class="mt-4 text-center font-semibold rounded-md p-4 hidden"></div>
+    </div>
+
+    <!-- Mensagens globais -->
+    <div id="message-container" class="hidden"></div>
+
+
+    <script>
+const loginContainer = document.getElementById('login-container');
+const mainContainer = document.getElementById('main-container');
+const loginButton = document.getElementById('login-btn');
+const adminUsernameInput = document.getElementById('admin-username');
+const adminPasswordInput = document.getElementById('admin-password');
+const loginMessageContainer = document.getElementById('login-message-container');
+const logoutButton = document.getElementById('logout-btn');
+const adminSection = document.getElementById('admin-section');
+const employeeList = document.getElementById('employee-list');
+const newEmployeeNameInput = document.getElementById('new-employee-name');
+const newEmployeeIdInput = document.getElementById('new-employee-id');
+const addEmployeeButton = document.getElementById('add-employee-btn');
+const recordListContainer = document.getElementById('record-list-container');
+const messageContainer = document.getElementById('message-container'); // Agora existe no HTML
+const recordList = document.getElementById('record-list'); // <- ADICIONADO
+const exportCsvButton = document.getElementById('export-csv-btn'); // <-- NOVO
+const filtroDataInput = document.getElementById('filtro-data');
+const filtrarBtn = document.getElementById('filtrar-btn');
+const historicoFiltrado = document.getElementById('historico-filtrado');
+
+let employees = JSON.parse(localStorage.getItem('employees')) || [];
+let adminLogs = JSON.parse(localStorage.getItem('adminLogs')) || []; // <-- NOVO
+let registroPonto = JSON.parse(localStorage.getItem('registroPonto')) || [];
+
+
+const adminUsername = 'admin';
+const adminPassword = 'password';
+
+function showMessage(message, type = 'success') {
+    messageContainer.textContent = message;
+    messageContainer.className = `mt-6 text-center font-semibold rounded-md p-4 message-${type}`;
+    messageContainer.classList.remove('hidden');
+    setTimeout(() => {
+        messageContainer.classList.add('hidden');
+    }, 3000);
+}
+
+function showLoginMessage(message, type = 'error') {
+    loginMessageContainer.textContent = message;
+    loginMessageContainer.className = `mt-4 text-center font-semibold rounded-md p-4 message-${type}`;
+    loginMessageContainer.classList.remove('hidden');
+}
+
+// NOVO: Função para registrar ações
+function logAdminAction(action) {
+    const timestamp = new Date().toLocaleString('pt-BR');
+    const listItem = document.createElement('li');
+    listItem.textContent = `[${timestamp}] ${action}`;
+    if (recordList) recordList.appendChild(listItem);
+
+    // Salvar também no localStorage
+    adminLogs.push({ time: timestamp, action });
+    localStorage.setItem('adminLogs', JSON.stringify(adminLogs));
+}
+
+function login() {
+    const username = adminUsernameInput.value.trim();
+    const password = adminPasswordInput.value.trim();
+
+    if (username === adminUsername && password === adminPassword) {
+        sessionStorage.setItem('adminLoggedIn', 'true');
+        loginContainer.style.display = 'none';
+        mainContainer.style.display = 'block';
+        adminSection.style.display = 'block';
+        recordListContainer.style.display = 'block';
+        updateEmployeeList();
+        logAdminAction('Administrador fez login.');
+    } else {
+        showLoginMessage('Credenciais inválidas. Por favor, tente novamente.');
+    }
+    adminUsernameInput.value = '';
+    adminPasswordInput.value = '';
+}
+
+function logout() {
+    sessionStorage.removeItem('adminLoggedIn');
+    mainContainer.style.display = 'none';
+    loginContainer.style.display = 'block';
+    adminSection.style.display = 'none';
+    recordListContainer.style.display = 'none';
+    logAdminAction('Administrador fez logout.');
+}
+
+function updateEmployeeList() {
+    employeeList.innerHTML = '<h3 class="text-lg font-semibold mb-4 text-gray-700">Lista de Funcionários</h3>';
+    employees.forEach(employee => {
+        const employeeItem = document.createElement('div');
+        employeeItem.className = 'employee-item';
+        employeeItem.innerHTML = `<span class="employee-name">${employee.name}</span>
+                                 <span class="employee-id">ID: ${employee.id}</span>
+                                 <button class="edit-btn" data-employee-id="${employee.id}">Editar</button>
+                                 <button class="delete-btn" data-employee-id="${employee.id}">Excluir</button>`;
+        employeeList.appendChild(employeeItem);
+    });
+
+    document.querySelectorAll('.edit-btn').forEach(button => {
+        button.addEventListener('click', editEmployee);
+    });
+    document.querySelectorAll('.delete-btn').forEach(button => {
+        button.addEventListener('click', deleteEmployee);
+    });
+}
+
+function addEmployee() {
+  const name = newEmployeeNameInput?.value.trim();
+  const id = newEmployeeIdInput?.value.trim();
+  
+  console.log("Valor do name:", name);
+  console.log("Valor do id:", id);
+
+  if (!name || !id) {
+    showMessage('Por favor, preencha nome e ID do funcionário.', 'error');
+    return;
+  }
+  
+  // resto do código ...
+
+
+
+    const existingEmployee = employees.find(emp => emp.id === id);
+    if (existingEmployee) {
+        showMessage('ID já cadastrado. Escolha outro.', 'error');
+        return;
+    }
+
+    const newEmployee = { name, id };
+    employees.push(newEmployee);
+    localStorage.setItem('employees', JSON.stringify(employees));
+    updateEmployeeList();
+    newEmployeeNameInput.value = '';
+    newEmployeeIdInput.value = '';
+    showMessage('Funcionário adicionado com sucesso!', 'success');
+    logAdminAction(`Funcionário "${name}" (ID: ${id}) adicionado.`);
+}
+
+function editEmployee(event) {
+    const employeeId = event.target.dataset.employeeId;
+    const employee = employees.find(emp => emp.id === employeeId);
+
+    if (employee) {
+        const newName = prompt('Digite o novo nome do funcionário:', employee.name);
+        if (newName) {
+            employee.name = newName.trim();
+            localStorage.setItem('employees', JSON.stringify(employees));
+            updateEmployeeList();
+            showMessage('Nome do funcionário editado com sucesso!', 'success');
+            logAdminAction(`Funcionário ID ${employeeId} teve o nome alterado para "${newName}".`);
+        }
+    }
+}
+
+function deleteEmployee(event) {
+    const employeeId = event.target.dataset.employeeId;
+    const employeeIndex = employees.findIndex(emp => emp.id === employeeId);
+
+    if (employeeIndex !== -1) {
+        const confirmation = confirm('Tem certeza que deseja excluir este funcionário?');
+        if (confirmation) {
+            const deleted = employees.splice(employeeIndex, 1)[0];
+            localStorage.setItem('employees', JSON.stringify(employees));
+            updateEmployeeList();
+            showMessage('Funcionário excluído com sucesso!', 'success');
+            logAdminAction(`Funcionário "${deleted.name}" (ID: ${deleted.id}) excluído.`);
+        }
+    }
+}
+
+// NOVO: Exportação para CSV
+function exportLogsToCSV() {
+    const logs = JSON.parse(localStorage.getItem('adminLogs')) || [];
+    if (logs.length === 0) {
+        showMessage('Nenhum registro para exportar.', 'error');
+        return;
+    }
+
+    let csvContent = 'data:text/csv;charset=utf-8,';
+    csvContent += 'Data/Hora,Ação\n';
+
+    logs.forEach(log => {
+        const row = `"${log.time}","${log.action}"`;
+        csvContent += row + '\n';
+    });
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', 'registros_administrativos.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+// Eventos
+if (loginButton) loginButton.addEventListener('click', login);
+if (logoutButton) logoutButton.addEventListener('click', logout);
+if (addEmployeeButton) {
+    addEmployeeButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        addEmployee();
+    });
+}
+if (exportCsvButton) exportCsvButton.addEventListener('click', exportLogsToCSV); // <-- NOVO
+
+// Funções de ação e utilitárias já definidas (login, logout, addEmployee, editEmployee, deleteEmployee, logAdminAction, showMessage, showLoginMessage, updateEmployeeList, exportLogsToCSV, filtrarHistoricoPorData)
+// Certifique-se que todas essas funções estão definidas antes deste bloco
+
+// Configuração dos event listeners e carregamento dos dados quando o DOM estiver pronto
+document.addEventListener('DOMContentLoaded', () => {
+    // Adiciona event listeners, verificando se os elementos existem para evitar erros
+    if (loginButton) {
+        loginButton.addEventListener('click', login);
+    }
+    if (logoutButton) {
+        logoutButton.addEventListener('click', logout);
+    }
+    if (addEmployeeButton) {
+        addEmployeeButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            addEmployee();
+        });
+    }
+    if (exportCsvButton) {
+        exportCsvButton.addEventListener('click', exportLogsToCSV);
+    }
+    if (filtrarBtn) {
+        filtrarBtn.addEventListener('click', filtrarHistoricoPorData);
+    }
+
+    // Verifica o estado do login e exibe ou oculta os containers correspondentes
+    if (sessionStorage.getItem('adminLoggedIn') === 'true') {
+        // Admin está logado: exibe as áreas administrativas
+        loginContainer.style.display = 'none';
+        mainContainer.style.display = 'block';
+        adminSection.style.display = 'block';
+        recordListContainer.style.display = 'block';
+        updateEmployeeList();
+    } else {
+        // Admin não está logado: exibe o container de login
+        loginContainer.style.display = 'block';
+        mainContainer.style.display = 'none';
+        // Você pode também ocultar outras seções se necessário
+    }
+
+    // Carrega os registros do backend e atualiza a interface
+    fetch('/registro')
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                const container = document.getElementById('record-list-items');
+                if (container) {
+                    container.innerHTML = '';
+                    data.records.forEach(record => {
+                        const row = document.createElement('div');
+                        row.className = "grid grid-cols-6 gap-2 text-sm text-gray-800 bg-white p-2 rounded-lg shadow-sm border";
+                        row.innerHTML = `
+                            <div>${record.employee_id}</div>
+                            <div>${record.nome}</div>
+                            <div>${record.date}</div>
+                            <div>${record.type}</div>
+                            <div>${record.time}</div>
+                            <div>${record.justification || '<span class="text-gray-400 italic">Sem justificativa</span>'}</div>
+                        `;
+                        container.appendChild(row);
+                    });
+                }
+            } else {
+                alert('Erro ao carregar os registros.');
+            }
+        })
+        .catch(() => {
+            alert('Erro de conexão com o servidor.');
+        });
+});
+
+
+const apagarRegistrosBtn = document.getElementById('apagar-registros-btn');
+
+if (apagarRegistrosBtn) {
+  apagarRegistrosBtn.addEventListener('click', async () => {
+    const confirmation = confirm('Tem certeza que deseja apagar todos os registros de ponto?');
+    if (!confirmation) return;
+
+    try {
+      const response = await fetch('/apagar_todos_registros', { method: 'DELETE' });
+      const data = await response.json();
+      alert(data.message);
+      
+      // Verifica se a função carregarRegistros está definida antes de chamá-la
+      if (typeof carregarRegistros === 'function') {
+        carregarRegistros();
+      }
+    } catch (error) {
+      alert('Erro ao apagar registros.');
+      console.error(error);
+    }
+  });
+}
+
+
+
+    </script>
+</body>
+</html>

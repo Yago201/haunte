@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Ponto</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@tailwindcss/browser@latest"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            background-color: #f7fafc;
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+        }
+
+        .heading {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #2d3748;
+            font-size: 2.25rem;
+            font-weight: bold;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+            color: #4a5568;
+            font-size: 1rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            border: 1px solid #e2e8f0;
+            font-size: 1rem;
+            line-height: 1.5rem;
+            transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #4299e1;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.15);
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.8rem 2rem;
+            border-radius: 0.5rem;
+            background-color: #4299e1;
+            color: #fff;
+            font-weight: 600;
+            font-size: 1.1rem;
+            line-height: 1.5rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out, transform 0.1s ease-in-out, box-shadow 0.3s ease-in-out;
+            border: none;
+            box-shadow: 0 5px 15px -5px rgba(0, 0, 0, 0.1), 0 3px 7px -3px rgba(0, 0, 0, 0.07);
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            background-color: #3182ce;
+            transform: translateY(-2px);
+            box-shadow: 0 7px 18px -5px rgba(0, 0, 0, 0.15), 0 4px 8px -4px rgba(0, 0, 0, 0.12);
+        }
+
+        .btn-primary:active {
+            background-color: #2a69ac;
+            transform: translateY(0);
+            box-shadow: 0 2px 5px -2px rgba(0, 0, 0, 0.1);
+        }
+
+        .message-container {
+            margin-top: 2rem;
+            padding: 1.25rem;
+            border-radius: 0.75rem;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .message-container.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .message-success {
+            background-color: #f0fdf4;
+            color: #15803d;
+            border: 1px solid #16a34a;
+        }
+
+        .message-error {
+            background-color: #fee2e2;
+            color: #b91c1c;
+            border: 1px solid #ef4444;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem;
+                border-radius: 0.75rem;
+                box-shadow: 0 6px 15px -3px rgba(0, 0, 0, 0.08), 0 2px 5px -2px rgba(0, 0, 0, 0.04);
+            }
+
+            .heading {
+                font-size: 2rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .form-input {
+                font-size: 0.95rem;
+                padding: 0.8rem;
+                border-radius: 0.5rem;
+            }
+
+            .btn-primary {
+                font-size: 1rem;
+                padding: 0.8rem 1.5rem;
+                border-radius: 0.5rem;
+            }
+
+            .form-label {
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 1rem;
+                border-radius: 0.5rem;
+            }
+
+            .heading {
+                font-size: 1.75rem;
+                margin-bottom: 1rem;
+            }
+
+            .form-group {
+                margin-bottom: 1rem;
+            }
+
+            .form-input {
+                font-size: 0.9rem;
+                padding: 0.75rem;
+                border-radius: 0.375rem;
+            }
+
+            .btn-primary {
+                font-size: 0.95rem;
+                padding: 0.75rem 1.25rem;
+                border-radius: 0.375rem;
+            }
+
+            .form-label {
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen py-10">
+  <!-- Container Principal -->
+  <main class="container bg-white rounded-lg shadow-md p-6 w-full max-w-md">
+    <h1 class="heading text-center text-2xl font-bold mb-6">Registro de Ponto</h1>
+    
+    <!-- Envolvendo os campos em um formulário para semântica aprimorada -->
+    <form id="registro-form" onsubmit="event.preventDefault();">
+      <!-- Campo para ID do Funcionário -->
+      <div class="form-group mb-4">
+        <label for="employee-id" class="form-label block mb-1">ID do Funcionário:</label>
+        <input 
+          type="text" 
+          id="employee-id" 
+          class="form-input w-full border rounded p-2" 
+          placeholder="Digite seu ID" 
+          required
+        >
+      </div>
+      
+      <!-- Seção para escolher o Tipo de Registro -->
+      <div class="form-group mb-4">
+        <span class="form-label block mb-1">Tipo de Registro:</span>
+        <div class="flex justify-center space-x-4">
+          <button 
+            type="button" 
+            onclick="registrarPonto('entrada')" 
+            class="btn-primary px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring"
+          >
+            Entrada
+          </button>
+          <button 
+            type="button" 
+            onclick="registrarPonto('saida')" 
+            class="btn-primary px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 focus:outline-none focus:ring"
+          >
+            Saída
+          </button>
+        </div>
+      </div>
+      
+      <!-- Campo para Justificativa (Opcional) -->
+      <div class="form-group mb-4">
+        <label for="justification" class="form-label block mb-1">Justificativa (Opcional):</label>
+        <textarea 
+          id="justification" 
+          class="form-input w-full border rounded p-2 h-32 resize-y" 
+          placeholder="Digite sua justificativa (opcional)"
+        ></textarea>
+      </div>
+    
+      <!-- Container para exibição de mensagens (sucesso/erro) -->
+      <div id="message-container" class="message-container hidden p-3 border rounded text-center"></div>
+    </form>
+  </main>
+
+    <script>
+       // Exibe uma mensagem de feedback para o usuário com base no tipo (sucesso ou erro)
+function showMessage(message, type = 'success') {
+  const messageContainer = document.getElementById('message-container');
+  if (!messageContainer) return; // Garante que o container exista
+
+  // Define o conteúdo e as classes de estilo conforme o tipo
+  messageContainer.textContent = message;
+  messageContainer.classList.remove('message-success', 'message-error', 'show');
+  messageContainer.classList.add(
+    'message-container',
+    type === 'success' ? 'message-success' : 'message-error',
+    'show'
+  );
+
+  // Remove a classe 'show' após 5 segundos para esconder a mensagem
+  setTimeout(() => {
+    messageContainer.classList.remove('show');
+  }, 5000);
+}
+
+// Registra o ponto (entrada ou saída) para o funcionário
+async function registrarPonto(type) {
+  // Obtém os elementos do DOM
+  const employeeInput = document.getElementById('employee-id');
+  const justificationInput = document.getElementById('justification');
+
+  // Verifica se o elemento do employee existe
+  if (!employeeInput) {
+    showMessage('Elemento para ID do funcionário não encontrado.', 'error');
+    return;
+  }
+
+  // Captura e limpa os valores
+  const employeeId = employeeInput.value.trim();
+  const justification = justificationInput ? justificationInput.value.trim() : '';
+
+  if (!employeeId) {
+    showMessage('Por favor, insira seu ID de funcionário.', 'error');
+    return;
+  }
+
+  // Cria o objeto de registro com os dados necessários
+  const registro = {
+    employeeId,
+    type,         // Pode ser 'entrada' ou 'saída'
+    justification // Pode ser vazio, se não houver justificativa
+  };
+
+  try {
+    // Envia os dados para o endpoint /registrar_ponto via POST
+    const response = await fetch('/registrar_ponto', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(registro)
+    });
+
+    const data = await response.json();
+
+    // Após a resposta, exibe a mensagem correspondente
+    if (data.success) {
+      showMessage(data.message, 'success');
+      // Limpa os inputs após o sucesso no registro
+      employeeInput.value = '';
+      if (justificationInput) {
+        justificationInput.value = '';
+      }
+    } else {
+      showMessage(data.message, 'error');
+    }
+  } catch (error) {
+    console.error('Erro ao registrar ponto:', error);
+    showMessage('Erro ao registrar ponto. Tente novamente mais tarde.', 'error');
+  }
+}
+
+    </script>
+</body>
+</html>

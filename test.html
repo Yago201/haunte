@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Teste de Input</title>
+</head>
+<body>
+  <input type="text" id="new-employee-id" placeholder="Digite o ID do funcionário">
+  <button id="test-btn">Testar</button>
+
+  <script>
+    document.getElementById('test-btn').addEventListener('click', () => {
+      const input = document.getElementById('new-employee-id');
+      alert('Valor: ' + (input?.value.trim() || "vazio"));
+    });
+
+    function addEmployee() {
+  const newEmployeeNameInput = document.getElementById('new-employee-name');
+  const newEmployeeIdInput = document.getElementById('new-employee-id');
+
+  console.log('newEmployeeNameInput:', newEmployeeNameInput);
+  console.log('newEmployeeIdInput:', newEmployeeIdInput);
+  
+  const name = newEmployeeNameInput ? newEmployeeNameInput.value.trim() : '';
+  const id = newEmployeeIdInput ? newEmployeeIdInput.value.trim() : '';
+  
+  console.log('Valor do nome:', name);
+  console.log('Valor do ID:', id);
+  
+  if (!name || !id) {
+    showMessage('Por favor, preencha nome e ID do funcionário.', 'error');
+    return;
+  }
+  
+  // Resto do código para adicionar o funcionário...
+}
+
+const registro = { employeeId: id, name: name };
+console.log('Registro a enviar:', registro);
+// Em seguida, faça a requisição fetch
+
+
+  </script>
+</body>
+</html>
